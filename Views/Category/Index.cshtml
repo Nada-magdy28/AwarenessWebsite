@@ -1,0 +1,246 @@
+﻿@model IEnumerable<AwarenessWebsite.Models.Category>
+@{
+	Layout = "_Content";
+}
+<section class="service_section">
+	<div class="container">
+		<div class="heading_container">
+			<h2>
+				At Our Topic
+			</h2>
+		</div>
+	</div>
+
+<!-- The Modal -->
+<div id="interestModal" class="modal">
+	<div class="modal-content">
+		<span class="close">&times;</span>
+		<h2>What inspires you? What do you enjoy?</h2>
+		<p>Tell us more about your hobbies and what you love. Please select up to five words.</p>
+		<div class="interests-grid">
+			<button class="interest-button" value="Art">Art</button>
+			<button class="interest-button" value="Travel">Travel</button>
+			<button class="interest-button" value="Music">Music</button>
+			<button class="interest-button" value="Sport">Sport</button>
+			<button class="interest-button" value="Movies">Movies</button>
+			<button class="interest-button" value="Design">Design</button>
+			<button class="interest-button" value="Nature">Nature</button>
+			<button class="interest-button" value="Technology">Technology</button>
+			<button class="interest-button" value="Crossfit">Crossfit</button>
+		</div>
+		<div class="selection-counter">0/5 selected</div>
+		<button id="saveInterests">Save Interests</button>
+	</div>
+</div>
+
+<!-- Display selected interests -->
+	<div id="selectedInterests"></div>
+
+	<script>
+				// script.js
+		const modal = document.getElementById('interestModal');
+		const closeModalBtn = document.querySelector('.close');
+		const saveInterestsBtn = document.getElementById('saveInterests');
+		const selectionCounter = document.querySelector('.selection-counter');
+		const interestButtons = document.querySelectorAll('.interest-button');
+
+		let selectedInterests = [];
+
+		// Open the modal automatically when the page loads
+		window.addEventListener('load', () => {
+			modal.classList.add('show');
+		});
+
+		// Close the modal smoothly
+		function closeModal() {
+			modal.classList.add('closing');
+			setTimeout(() => {
+				modal.classList.remove('show', 'closing');
+			}, 300);
+		}
+
+		// Close the modal when the close button is clicked
+		closeModalBtn.addEventListener('click', closeModal);
+
+		// Close the modal when clicking outside the modal
+		window.addEventListener('click', (event) => {
+			if (event.target === modal) {
+				closeModal();
+			}
+		});
+
+		// Handle interest button clicks
+		interestButtons.forEach(button => {
+			button.addEventListener('click', () => {
+				if (button.classList.contains('selected')) {
+					// Deselect the button
+					button.classList.remove('selected');
+					selectedInterests = selectedInterests.filter(item => item !== button.value);
+				} else {
+					// Check if the selection limit is reached
+					if (selectedInterests.length < 5) {
+						button.classList.add('selected');
+						selectedInterests.push(button.value);
+					} else {
+						alert('You can only select up to 5 interests.');
+					}
+				}
+				// Update the selection counter
+				selectionCounter.textContent = `${selectedInterests.length}/5 selected`;
+			});
+		});
+
+		// Save selected interests
+		saveInterestsBtn.addEventListener('click', () => {
+			closeModal();
+		});
+	</script>
+
+
+
+
+	<div class="container">
+		<div class="row">
+			@foreach (var category in Model)
+			{
+
+
+
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+
+					<div class="tm-content-box">
+						<img src="@category.ImagePath" alt="@category.Name">
+						<h4 class="tm-margin-b-20 tm-gold-text"> @category.Name </h4>
+						<p class="tm-margin-b-20">
+							@category.Description
+						</p>
+						<a href="/Content/CategoryContent?categoryId=@category.Id" class="tm-btn text-uppercase">Read More</a>
+					</div>
+
+				</div>
+
+			}
+		</div>
+	</div>
+</section>
+
+
+<style>
+	
+	/* The Modal */
+	.modal {
+		display: none; /* Hidden by default */
+		position: fixed;
+		z-index: 1;
+		left: 0;
+		top: 0;
+		width: 100%;
+		height: 100%;
+		overflow: auto;
+		background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent background */
+		transition: opacity 0.3s ease;
+	}
+
+		.modal.show {
+			display: block; /* Show the modal */
+		}
+
+	/* Modal Content */
+	.modal-content {
+		background-color: #fff;
+		margin: 10% auto;
+		padding: 20px;
+		border-radius: 8px;
+		width: 400px;
+		text-align: center;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		transform: scale(1);
+		opacity: 1;
+		transition: transform 0.3s ease, opacity 0.3s ease;
+	}
+
+	/* Close Button */
+	.close {
+		position: absolute; /* Position the close button absolutely */
+		top: 10px; /* Distance from the top */
+		right: 10px; /* Distance from the right */
+		font-size: 24px;
+		font-weight: bold;
+		cursor: pointer;
+		color: #000; /* Default color */
+		background-color: transparent;
+		border: none;
+		padding: 0;
+		width: 30px;
+		height: 30px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%; /* Make it circular */
+		transition: background-color 0.3s ease, color 0.3s ease;
+	}
+
+		.close:hover {
+			color: #e93f1a;
+		}
+
+	/* Interests Grid */
+	.interests-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr); /* 3 columns */
+		gap: 10px;
+		margin: 20px 0;
+	}
+
+	/* Transparent Buttons */
+	.interest-button {
+		padding: 10px;
+		background-color: transparent;
+		border: 1px solid #e93f1a;
+		border-radius: 20px;
+		color: #e93f1a;
+		cursor: pointer;
+		transition: background-color 0.3s ease, color 0.3s ease;
+	}
+
+		.interest-button:hover {
+			background-color: #e93f1a;
+			color: #fff;
+		}
+
+		.interest-button.selected {
+			background-color: #e93f1a;
+			color: #fff;
+		}
+
+	/* Selection Counter */
+	.selection-counter {
+		margin: 20px 0;
+		font-weight: bold;
+	}
+
+	/* Save Interests Button */
+	#saveInterests {
+		padding: 10px 20px;
+		background-color: #28a745;
+		color: #fff;
+		border: none;
+		border-radius: 5px;
+		cursor: pointer;
+	}
+
+		#saveInterests:hover {
+			background-color: #218838;
+		}
+
+	/* Smooth closing animation */
+	.modal.closing {
+		opacity: 0;
+	}
+
+		.modal.closing .modal-content {
+			transform: scale(0.9);
+			opacity: 0;
+		}
+</style>
+
